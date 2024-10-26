@@ -1,0 +1,5 @@
+hola mundo
+este es un 
+Ejemplo \n
+\14:59
+:;

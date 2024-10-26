@@ -1,0 +1,53 @@
+manGCC.txt
+1204939 caracteres
+1,1 MiB (1.204.939 bytes)
+
+Solo leer e iterar:
+./main manGCC.txt  0,01s user 0,00s system 64% cpu 0,018 total
+
+Cargando en vector dinamico:
+./main manGCC.txt  0,02s user 0,00s system 96% cpu 0,021 total
+./main manGCC.txt  0,01s user 0,00s system 95% cpu 0,015 total
+
+Leyendo el vectro dinamico:
+./main manGCC.txt  0,05s user 0,06s system 99% cpu 0,108 total
+./main manGCC.txt  0,05s user 0,06s system 99% cpu 0,116 total
+
+Cargando en lista enlazada: 
+./struct manGCC.txt  0,04s user 0,03s system 98% cpu 0,078 total
+./struct manGCC.txt  0,05s user 0,03s system 98% cpu 0,083 total
+
+Leyendo la lista enlazada:
+./struct manGCC.txt  0,09s user 0,10s system 99% cpu 0,182 total
+./struct manGCC.txt  0,10s user 0,07s system 99% cpu 0,178 total
+
+
+Archivo: 100mb.txt
+100.000.000 caracteres
+95,4 MiB (100.000.000 bytes)
+
+Estructura de datos:
+time ./struct 100mb.txt
+100000000
+./struct 100mb.txt  3,95s user 4,78s system 97% cpu 8,930 total
+time ./struct 100mb.txt
+100000000
+./struct 100mb.txt  3,95s user 4,78s system 97% cpu 8,720 total
+
+Vector dinamico:
+time ./main 100mb.txt
+100000000
+./main 100mb.txt  0,70s user 0,24s system 96% cpu 0,973 total
+time ./main 100mb.txt
+100000000
+./main 100mb.txt  0,68s user 0,16s system 99% cpu 0,838 total
+
+Puntero a Vector de tamaño estatico bytes de archivo:
+time ./main2 100mb.txt
+100000000
+./main2 100mb.txt  0,59s user 0,06s system 99% cpu 0,651 total
+time ./main2 100mb.txt
+100000000
+./main2 100mb.txt  0,57s user 0,08s system 99% cpu 0,645 total
+
+
