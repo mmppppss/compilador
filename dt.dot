@@ -1,0 +1,124 @@
+digraph DT {
+	rankdir=LR  
+	size="300" 
+	node [shape = circle] 
+	//splines = false
+	0
+	1
+	2 [shape = doublecircle]  
+	3
+	4 
+	5
+	6 [shape = doublecircle]
+	7 [shape = doublecircle]
+	8 [shape = doublecircle]  
+	9 [shape = doublecircle]  
+	10 [shape = doublecircle] 
+	11 [shape = doublecircle] 
+	12
+	13 [shape = doublecircle] 
+	14 [shape = doublecircle] 
+	15 
+	16 [shape = doublecircle] 
+	17 [shape = doublecircle] 
+	18
+	19 [shape = doublecircle] 
+	20 [shape = doublecircle] 
+	21 
+	22 [shape = doublecircle] 
+	23 [shape = doublecircle] 
+	24 [shape = doublecircle] 
+	25 [shape = doublecircle] 
+	26
+	27 [shape = doublecircle] 
+	28 [shape = doublecircle] 
+	29 [shape = doublecircle] 
+	//tokens
+	num [shape = note, label="<num>"]
+	cad [shape=note, label="<cad>"]
+	sum [shape=note, label="<sum>"]
+	res [shape=note, label="<res>"]
+	mul [shape=note, label="<mul>"]
+	div [shape=note, label="<div>"]
+	mod [shape=note, label="<mod>"]
+	myr [shape=note, label="<myr>"]
+	myi [shape=note, label="<myi>"]
+	mnr [shape=note, label="<mnr>"]
+	mni [shape=note, label="<mni>"]
+	asg [shape=note, label="<asg>"]
+	igu [shape=note, label="<igu>"]
+	not [shape=note, label="<not>"]
+	dif [shape=note, label="<dif>"]
+	and [shape=note, label="<and>"]
+	or [shape=note, label="<or>"]
+	idt [shape=note, label="<idt>"]
+	pap [shape=note, label="<pap>"]
+	pci [shape=note, label="<pci>"]
+
+	// Estados inicial y final
+	inicio [shape = point] // Nodo invisible para el inicio
+	inicio -> 0            // Transición de inicio al primer estado
+
+	//nums
+	0 -> 1 [label="0-9"]
+	1 -> 1 [label="0-9"]
+	1 -> 2 [label="otro"]
+	1 -> 3 [label="·"]
+	3 -> 2 [label="otro"]
+	3 -> 3 [label="0-9"]
+	2 -> num
+	//cad
+	0 -> 4 [label="\""]
+	4 -> 4 [label="![\",\\]"]
+	4 -> 5 [label=" \\  "]
+	5 -> 4 [label="car"]
+	4 -> 6 [label="\""]
+	6 -> cad
+	//op matematica
+	0 -> 7 [label=" + "]
+	7 -> sum
+	0 -> 8 [label=" - "]
+	8 -> res
+	0 -> 9 [label="*"]
+	9 -> mul
+	0 -> 10 [label="/"]
+	10 -> div 
+	0 -> 11 [label="%"]
+	11 -> mod
+	//op relacional
+	0 -> 12 [label=">"]
+	12 -> 13 [label="otro"]
+	13 -> myr
+	12 -> 14 [label="="]
+	14 -> myi
+	0 -> 15 [label="<"]
+	15 -> 16 [label="otro"]
+	16 -> mnr
+	15 -> 17 [label="="]
+	17 -> mni
+	0 -> 18 [label="="]
+	18 -> 19 [label="otro"]
+	19 -> asg
+	18 -> 20 [label="="]
+	20 -> igu
+	0 -> 21 [label="!"]
+	21 -> 22 [label="otro"]
+	22 -> not
+	21 -> 23 [label="="]
+	23 -> dif
+	//op log 
+	0 -> 24 [label="&"]
+	24 -> and
+	0 -> 25 [label="|"]
+	25 -> or
+	//identificador
+	0 -> 26 [label="a-zA-Z"]
+	26 -> 26 [label="a-zA-Z0-9_"]
+	26 -> 27 [label="otro"]
+	27 -> idt
+	//parentesis
+	0 -> 28 [label="("]
+	28 -> pap
+	0 -> 29 [label=")"]
+	29 -> pci
+}
