@@ -6,6 +6,7 @@
 
 #include "Token.h"
 #include "reader.h"
+#include "lTokens.h"
 
 Token token;
 
@@ -35,9 +36,8 @@ void analex() {
 		printf("estado: %d\t\t", estado);
 		printf("acumlador: %s\n", ac);
 		*/
-        if (c == EOF) {
-            break;
-        }
+        //if (c == EOF) 
+        //w  break;
 	
         switch (estado) {
             case 0:
@@ -312,8 +312,10 @@ void analex() {
 
 void start(char *filename) { 
     Reader *reader = createReader(filename);
+	lToken list=malloc(sizeof(lisToken));
 	while(reader->pos < reader->count-1){
 		analex();
+		pushToken(&list, token);
 		printf(" %s ",getToken(token));
 		if(getChar()=='\n')
 			printf("\n");
@@ -321,6 +323,11 @@ void start(char *filename) {
 			printf("\t");
 		//printf("%s", token.value);
 	}
+	/*
+	while (list!=NULL) {
+		printf("%s\n", getToken(list->tk));
+		list=list->sig;
+	}*/
 }
 /*
 int main(int argc, char *argv[]) {

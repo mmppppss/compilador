@@ -1,6 +1,5 @@
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include "libs/tokenizer.c"
 int main(int argc, char *argv[]) {
     if (argc < 2) {
@@ -19,6 +18,7 @@ int main(int argc, char *argv[]) {
 			printf("%s", getLine(*ln));
 		}
 		if(strcmp(argv[i],opt2)==0){
+			//add reader sin tokenizer
 			show();
 		}
 		if(strcmp(argv[i],opt3)==0){
