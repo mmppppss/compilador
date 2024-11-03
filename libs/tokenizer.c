@@ -40,6 +40,10 @@ void analex() {
         //w  break;
 	
         switch (estado) {
+			case -1:
+				token = createToken(ERR, "End of File");
+				return;
+				break;
             case 0:
                 if (c == ' ') {
                     avanzar(); // Ignorar espacios en blanco
@@ -86,7 +90,6 @@ void analex() {
 					avanzar();
 				} else if (isalpha(c)) {
 					ac = concat(ac,c);;//ac[sizeof(ac)]=c;
-					
 					estado=26;
 					avanzar();
 				} else if (c == '(') {
@@ -95,6 +98,9 @@ void analex() {
 				} else if (c == ')') {
 					estado=29;
 					avanzar();
+				} else if(c=='\0'){
+					estado=-1;
+					avanzar();//no usado
 				} else {
                 	estado=0;
 					//printf("deteccion no valida %c",c);
@@ -140,21 +146,26 @@ void analex() {
 					avanzar();
 				}else if(c=='"'){
 					ac = concat(ac,c);;//ac[sizeof(ac)]=c;
-					
 					estado=6;
 					avanzar();
-				}else{
+				}else if (c=='\0') {
+					estado=-1;
+					avanzar();//no usado
+				} else {
 					ac = concat(ac,c);;//ac[sizeof(ac)]=c;
-					
 					avanzar();
 					//sigue en est 4
 				}
 				break;
 			case 5:
-				ac = concat(ac,c);;//ac[sizeof(ac)]=c;
-					
-				estado=4;
-				avanzar();
+				if (c=='\0') {
+					estado=-1;
+					avanzar();//no usado
+				}else {
+					ac = concat(ac,c);;//ac[sizeof(ac)]=c;
+					estado=4;
+					avanzar();
+				}
 				break;
 			case 6:
 				token = createToken(CAD, ac);
@@ -317,6 +328,9 @@ void start(char *filename) {
 		analex();
 		pushToken(&list, token);
 		printf(" %s ",getToken(token));
+		if(token.type==ERR)
+			printf("Error in line:");
+			return;
 		if(getChar()=='\n')
 			printf("\n");
 		if(getChar()=='\t')
