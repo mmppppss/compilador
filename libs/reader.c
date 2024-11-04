@@ -59,16 +59,16 @@ void loadFile() {
 }
 
 int calcLine(){
-	int i=1;
-	printf("%d\n", reader.pos);
-	while (reader.pos>reader.lines[i]) {
-		printf("%d", i);
-		printf("%s", getLine(i));
-		i++;
+	int i=0;
+	for(int j=0; j<reader.countlines; j++){
+		if(reader.lines[j]>= reader.pos){
+			return i+1;
+		}else{
+			i++;
+		}
 	}
-	return i-1;
+	return i;
 }
-
 char *getLine(int line) {
 	char *codeLine="";
 	if(line<= reader.countlines){
