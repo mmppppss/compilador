@@ -16,6 +16,7 @@ extern Reader reader;
 Reader *createReader(char *filename);
 int getSize();
 void loadFile();
+int calcLine();
 char *getLine(int line);
 void show();
 void avanzar();

@@ -51,6 +51,17 @@ void loadFile() {
 	fclose(f);
 }
 
+int calcLine(){
+	int i=1;
+	printf("%d\n", reader.pos);
+	while (reader.pos>reader.lines[i]) {
+		printf("%d", i);
+		printf("%s", getLine(i));
+		i++;
+	}
+	return i-1;
+}
+
 char *getLine(int line) {
 	char *codeLine="";
 	if(line<= reader.countlines){
@@ -63,7 +74,6 @@ char *getLine(int line) {
 	}
 	return codeLine;
 }
-
 
 void show(){
 	char *bar = "\033[32m|";

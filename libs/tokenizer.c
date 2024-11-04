@@ -328,9 +328,10 @@ void start(char *filename) {
 		analex();
 		pushToken(&list, token);
 		printf(" %s ",getToken(token));
-		if(token.type==ERR)
-			printf("Error in line:");
+		if(token.type==ERR){
+			printf("Error in line: %d\n", calcLine());
 			return;
+		}
 		if(getChar()=='\n')
 			printf("\n");
 		if(getChar()=='\t')
