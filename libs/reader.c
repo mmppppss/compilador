@@ -16,6 +16,13 @@ Reader *createReader(char *filename) {
 	return &reader;
 }
 
+char* concat(char* s, char c) {
+    char* x = malloc(strlen(s) + 2); // +1 para el carácter y +1 para el terminador nulo
+    strcpy(x, s);
+    x[strlen(s)] = c;
+    x[strlen(s) + 1] = '\0';
+    return x;
+}
 int getSize(){
 	// from: https://www.techiedelight.com/es/find-size-of-file-c/
 	struct stat st;
@@ -68,8 +75,9 @@ char *getLine(int line) {
 		int pos = reader.lines[line-1]; //line 2 in lines = [1,2,3]
 		int sizeLine = reader.lines[line]-pos-1;
 		codeLine = (char*) malloc((sizeLine)*sizeof(char));
+		codeLine = concat("", '\0');
 		while (reader.data[pos]!='\n') {
-			codeLine[strlen(codeLine)] = reader.data[pos++];
+			codeLine = concat(codeLine, reader.data[pos++]);
 		}
 	}
 	return codeLine;

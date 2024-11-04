@@ -43,12 +43,15 @@ const char* tokenToString(tokenType t) {
 
 char *getToken(Token token) {
     char *value = token.value;
-    size_t length = snprintf(NULL, 0, "<%s:%s>", tokenToString(token.type), value) + 1;
+	char *grn = "\033[32m";
+	char *cln = "\033[0m";
+    size_t length = snprintf(NULL, 0, "%s<%s%s:%s%s>%s", grn,cln, tokenToString(token.type), value, grn, cln) + 1;
     char *result = (char *)malloc(length);
     if (result == NULL) {
         printf("Error al asignar memoria\n");
         exit(1);
     }
-    sprintf(result, "<%s:%s>", tokenToString(token.type), value);
+	sprintf(result,  "%s<%s%s:%s%s>%s", grn,cln, tokenToString(token.type), value, grn, cln);
+    //sprintf(result, "<%s:%s>", tokenToString(token.type), value);
     return result;
 }

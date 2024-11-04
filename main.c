@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Uso: %s <nombre_del_archivo>\n\tOptions: -s -v -t\n", argv[0]);
         return 1;
     }
-
+    Reader *reader = createReader(argv[1]);
 	for (int i = 2; i < argc; i++) {
 		char *opt= "-s";
 		char *opt2= "-v";
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 			show();
 		}
 		if(strcmp(argv[i],opt3)==0){
-			start(argv[1]);
+			start(reader);
 		}
 	}
 

@@ -14,6 +14,7 @@ typedef struct{
 extern Reader reader;
 
 Reader *createReader(char *filename);
+char* concat(char* s, char c);
 int getSize();
 void loadFile();
 int calcLine();

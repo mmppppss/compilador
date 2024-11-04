@@ -10,13 +10,6 @@
 
 Token token;
 
-char* concat(char* s, char c) {
-    char* x = malloc(strlen(s) + 2); // +1 para el carácter y +1 para el terminador nulo
-    strcpy(x, s);
-    x[strlen(s)] = c;
-    x[strlen(s) + 1] = '\0';
-    return x;
-}
 
 
 void analex() {
@@ -321,22 +314,21 @@ void analex() {
     }
 } 
 
-void start(char *filename) { 
-    Reader *reader = createReader(filename);
+void start(Reader *reader) { 
 	lToken list=malloc(sizeof(lisToken));
 	while(reader->pos < reader->count-1){
 		analex();
-		pushToken(&list, token);
+
+		//pushToken(&list, token);
 		printf(" %s ",getToken(token));
 		if(token.type==ERR){
-			printf("Error in line: %d\n", calcLine());
+			printf("\nError in line: %d\n", calcLine());
 			return;
 		}
 		if(getChar()=='\n')
 			printf("\n");
 		if(getChar()=='\t')
 			printf("\t");
-		//printf("%s", token.value);
 	}
 	/*
 	while (list!=NULL) {
@@ -344,13 +336,3 @@ void start(char *filename) {
 		list=list->sig;
 	}*/
 }
-/*
-int main(int argc, char *argv[]) {
-	if (argc < 2) {
-		printf("Uso: %s <filename>\n", argv[0]);
-		return EXIT_FAILURE;
-	}
-	char *filename = argv[1];
-	start(filename);
-	return EXIT_SUCCESS;
-}*/
