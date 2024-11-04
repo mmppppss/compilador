@@ -14,8 +14,11 @@ typedef struct{
 extern Reader reader;
 
 Reader *createReader(char *filename);
+
+char* concat(char* s, char c);
 int getSize();
 void loadFile();
+int calcLine();
 char *getLine(int line);
 void show();
 void avanzar();

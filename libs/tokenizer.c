@@ -6,17 +6,9 @@
 
 #include "Token.h"
 #include "reader.h"
+#include "lTokens.h"
 
 Token token;
-
-char* concat(char* s, char c) {
-    char* x = malloc(strlen(s) + 2); // +1 para el carácter y +1 para el terminador nulo
-    strcpy(x, s);
-    x[strlen(s)] = c;
-    x[strlen(s) + 1] = '\0';
-    return x;
-}
-
 
 void analex() {
 	char *ac = NULL;
@@ -35,11 +27,15 @@ void analex() {
 		printf("estado: %d\t\t", estado);
 		printf("acumlador: %s\n", ac);
 		*/
-        if (c == EOF) {
-            break;
-        }
+
+        //if (c == EOF) 
+        //w  break;
 	
         switch (estado) {
+			case -1:
+				token = createToken(ERR, "End of File");
+				return;
+				break;
             case 0:
                 if (c == ' ') {
                     avanzar(); // Ignorar espacios en blanco
@@ -86,7 +82,6 @@ void analex() {
 					avanzar();
 				} else if (isalpha(c)) {
 					ac = concat(ac,c);;//ac[sizeof(ac)]=c;
-					
 					estado=26;
 					avanzar();
 				} else if (c == '(') {
@@ -95,6 +90,9 @@ void analex() {
 				} else if (c == ')') {
 					estado=29;
 					avanzar();
+				} else if(c=='\0'){
+					estado=-1;
+					avanzar();//no usado
 				} else {
                 	estado=0;
 					//printf("deteccion no valida %c",c);
@@ -140,44 +138,49 @@ void analex() {
 					avanzar();
 				}else if(c=='"'){
 					ac = concat(ac,c);;//ac[sizeof(ac)]=c;
-					
 					estado=6;
 					avanzar();
-				}else{
+				}else if (c=='\0') {
+					estado=-1;
+					avanzar();//no usado
+				} else {
 					ac = concat(ac,c);;//ac[sizeof(ac)]=c;
-					
 					avanzar();
 					//sigue en est 4
 				}
 				break;
 			case 5:
-				ac = concat(ac,c);;//ac[sizeof(ac)]=c;
-					
-				estado=4;
-				avanzar();
+				if (c=='\0') {
+					estado=-1;
+					avanzar();//no usado
+				}else {
+					ac = concat(ac,c);;//ac[sizeof(ac)]=c;
+					estado=4;
+					avanzar();
+				}
 				break;
 			case 6:
 				token = createToken(CAD, ac);
 				return;
 				break;
 			case 7:
-				token = createToken(SUM, "");
+				token = createToken(SUM, "_");
 				return;
 				break;
 			case 8:
-				token = createToken(RES, "");
+				token = createToken(RES, "_");
 				return;
 				break;
 			case 9:
-				token = createToken(MUL, "");
+				token = createToken(MUL, "_");
 				return;
 				break;
 			case 10:
-				token = createToken(DIV, "");
+				token = createToken(DIV, "_");
 				return;
 				break;
 			case 11:
-				token = createToken(MOD, "");
+				token = createToken(MOD, "_");
 				return;
 				break;
 			case 12:
@@ -189,11 +192,11 @@ void analex() {
 				}
 				break;
 			case 13:
-				token = createToken(MYR, "");
+				token = createToken(MYR, "_");
 				return;
 				break;
 			case 14:
-				token = createToken(MYI, "");
+				token = createToken(MYI, "_");
 				return;
 				break;
 			case 15:
@@ -205,11 +208,11 @@ void analex() {
 				}
 				break;
 			case 16:
-				token = createToken(MNR, "");
+				token = createToken(MNR, "_");
 				return;
 				break;
 			case 17:
-				token = createToken(MNI, "");
+				token = createToken(MNI, "_");
 				return;
 				break;
 			case 18:
@@ -220,11 +223,11 @@ void analex() {
 					estado = 19;
 				}
 			case 19:
-				token = createToken(ASG, "");
+				token = createToken(ASG, "_");
 				return;
 				break;
 			case 20:
-				token = createToken(IGU, "");
+				token = createToken(IGU, "_");
 				return;
 				break;
 			case 21:
@@ -236,19 +239,19 @@ void analex() {
 				}
 				break;
 			case 22:
-				token = createToken(NOT, "");
+				token = createToken(NOT, "_");
 				return;
 				break;
 			case 23:
-				token = createToken(DIF,"");
+				token = createToken(DIF,"_");
 				return;
 				break;
 			case 24:
-				token = createToken(AND, "");
+				token = createToken(AND, "_");
 				return;
 				break;
 			case 25:
-				token = createToken(OR_, "");
+				token = createToken(OR_, "_");
 				return;
 				break;
 			case 26:
@@ -271,7 +274,7 @@ void analex() {
 				};
 				for(int i = 0;  i < 5; i++) {
 					if(strcmp(reservadas[i], ac)==0){
-						token = createToken(IDT, reservadas[i]);
+						token = createToken(IDT, "_");
 						switch (i) {
 							case 0:
 								token.type=LEE;
@@ -296,11 +299,11 @@ void analex() {
 				return;}
 				break;
 			case 28:
-				token = createToken(PAP, "");
+				token = createToken(PAP, "_");
 				return;
 				break;
 			case 29:
-				token = createToken(PCI, "");
+				token = createToken(PCI, "_");
 				return;
 				break;
             default:
@@ -310,21 +313,26 @@ void analex() {
     }
 } 
 
-void start(char *filename) { 
-    Reader *reader = createReader(filename);
+
+void start(Reader *reader) { 
+	lToken list=malloc(sizeof(lisToken));
 	while(reader->pos < reader->count-1){
 		analex();
-		printf("Token: %s\n",getToken(token));
-		//printf("%s", token.value);
+
+		//pushToken(&list, token);
+		printf(" %s ",getToken(token));
+		if(token.type==ERR){
+			printf("\nError in line: %d\n", calcLine());
+			return;
+		}
+		if(getChar()=='\n')
+			printf("\n");
+		if(getChar()=='\t')
+			printf("\t");
 	}
+	/*
+	while (list!=NULL) {
+		printf("%s\n", getToken(list->tk));
+		list=list->sig;
+	}*/
 }
-/*
-int main(int argc, char *argv[]) {
-	if (argc < 2) {
-		printf("Uso: %s <filename>\n", argv[0]);
-		return EXIT_FAILURE;
-	}
-	char *filename = argv[1];
-	start(filename);
-	return EXIT_SUCCESS;
-}*/
