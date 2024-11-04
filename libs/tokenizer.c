@@ -320,15 +320,17 @@ void start(Reader *reader) {
 		analex();
 
 		//pushToken(&list, token);
-		printf(" %s ",getToken(token));
 		if(token.type==ERR){
-			printf("\nError in line: %d\n", calcLine());
+			printf("\nError in Line: %d, Caracter: %c\n", calcLine(), reader->data[reader->pos-2]);
 			return;
+		}else {
+			printf(" %s ",getToken(token));
+			if(getChar()=='\n')
+				printf("\n");
+			if(getChar()=='\t')
+				printf("\t");
+
 		}
-		if(getChar()=='\n')
-			printf("\n");
-		if(getChar()=='\t')
-			printf("\t");
 	}
 	/*
 	while (list!=NULL) {
