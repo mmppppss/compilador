@@ -176,8 +176,12 @@ void analex() {
 				return;
 				break;
 			case 10:
-				token = createToken(DIV, "_");
-				return;
+				if(c=='/'){
+					estado=30;
+				}else{
+					token = createToken(DIV, "_");
+					return;
+				}
 				break;
 			case 11:
 				token = createToken(MOD, "_");
@@ -306,6 +310,15 @@ void analex() {
 				token = createToken(PCI, "_");
 				return;
 				break;
+			case 30:
+				if(c=='\n'){
+					estado=0;
+					avanzar();
+				}else{
+					estado=30;
+					avanzar();
+				}
+			break;
             default:
 				printf("Deteccion no valida %c\n", c);
                 break;
