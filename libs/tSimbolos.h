@@ -14,10 +14,11 @@ typedef struct tSimbolos{
 }tSimbolos;
 
 typedef tSimbolos* tSimbolo;
-void tsInstall(char* id, double val);
+int tsInstall(char* id, double val);
 double tsGetVal(char* id);
 bool tsExist(char* id);
-void tsSetVal(char* id, double val);
+int tsSetVal(char* id, double val);
+void tsSetValPos(int pos, double val);
 char* tsGetId(); //para obtener el ultimo solo para pruebas
 void tsPrint();
 #endif

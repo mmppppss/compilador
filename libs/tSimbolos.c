@@ -5,17 +5,21 @@
 #include <stdbool.h>
 
 tSimbolo tablaSimbolos;
-void tsInstall(char* id, double val){
+
+
+int tsInstall(char* id, double val){
 	if (tsExist(id)) {
-		tsSetVal(id, val);
+		return tsSetVal(id, val);
 	}else{
         tSimbolo aux = malloc(sizeof(tSimbolos));
         aux->id = strdup(id); // Duplicar la cadena para evitar problemas de punteros
         aux->val = val;
         aux->sig = tablaSimbolos; // Insertar al inicio de la lista
         tablaSimbolos = aux;
+		return 0;
 	}
 }
+
 double tsGetVal(char* id){
     tSimbolo temp = tablaSimbolos;
     while (temp != NULL) {
@@ -37,14 +41,19 @@ bool tsExist(char* id){
 	}
 	return false;
 }
-void tsSetVal(char* id, double val){
+int tsSetVal(char* id, double val){
 	tSimbolo temp = tablaSimbolos;
-	while (temp != NULL && strcmp(temp->id, id) != 0) {
-		temp = temp->sig;
-	}
-	if (temp != NULL) {
-		temp->val = val;
-	}
+	int pos = 0;
+	
+	while (temp != NULL) {
+        if (strcmp(temp->id, id) == 0) {
+            temp->val = val;
+            return pos; 
+        }
+        temp = temp->sig;
+        pos++;
+    }
+	return -1;
 }
 void tsPrint(){
 	tSimbolo temp = tablaSimbolos;
@@ -56,4 +65,17 @@ void tsPrint(){
 }
 char* tsGetId(){
 	return tablaSimbolos->id;
+}
+
+void tsSetValPos(int pos, double val){
+	tSimbolo temp = tablaSimbolos;
+	int i = 0;
+	while (temp != NULL) {
+		if (i == pos) {
+			temp->val = val;
+			return;
+		}
+		temp = temp->sig;
+		i++;
+	}
 }

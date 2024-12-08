@@ -37,6 +37,7 @@ const char* tokenToString(tokenType t) {
 		case IRA: return "IRA";
 		case SI_: return "SI_";
 		case ENT: return "ENT";
+		case COM: return "COM";
         default: return "UNKNOWN";
     }
 }

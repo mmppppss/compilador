@@ -5,21 +5,23 @@
 typedef enum {
 	NUM,
 	CAD,
+	//cambiar por ART + * / -
 	SUM,
 	RES,
 	MUL,
 	DIV,
 	MOD,
+	//cambiar por LOG > < == 
 	MYR,
 	MYI,
 	MNR,
 	MNI,
-	ASG,
 	IGU,
 	NOT,
 	DIF,
 	AND,
 	OR_,
+	ASG,
 	IDT,
 	PAP,
 	PCI,
@@ -28,7 +30,8 @@ typedef enum {
 	ESC,
 	IRA,
 	SI_,
-	ENT
+	ENT,
+	COM
 }tokenType;
 /*typedef enum{
 	LEE,

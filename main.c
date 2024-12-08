@@ -1,6 +1,6 @@
 #include <string.h>
 #include <stdio.h>
-#include "libs/tokenizer.c"
+#include "libs/Parser.c"
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         fprintf(stderr, "Uso: %s <nombre_del_archivo>\n\tOptions: -s -v -t\n", argv[0]);
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 			show();
 		}
 		if(strcmp(argv[i],opt3)==0){
-			start(reader);
+			iniciar(reader);
 		}
 	}
 

@@ -46,7 +46,6 @@ void analex() {
 					avanzar();
                 }else if (c == '"') {
                 	ac = concat(ac,c);//ac[sizeof(ac)]=c;
-					
 					estado=4;
 					avanzar();
                 } else if (c == '+') {
@@ -94,6 +93,9 @@ void analex() {
 				} else if(c=='\0'){
 					estado=-1;
 					avanzar();//no usado
+				} else if(c==','){
+					estado=31;
+					avanzar();	
 				} else {
                 	estado=0;
 					//printf("deteccion no valida %c",c);
@@ -300,8 +302,12 @@ void analex() {
 						return;
 					}
 				}
-				token = createToken(IDT, ac);
-				tsInstall(ac, 0.0);
+
+				int posTS = tsInstall(ac, 0.0);
+				//char str[20];
+				char *str = malloc(20 * sizeof(char));
+				snprintf(str, sizeof(str), "%d", posTS);
+				token = createToken(IDT, str);
 				return;}
 				break;
 			case 28:
@@ -321,6 +327,10 @@ void analex() {
 					avanzar();
 				}
 			break;
+			case 31:
+				token = createToken(COM, "_");
+				return;
+				break;
             default:
 				printf("Deteccion no valida %c\n", c);
                 break;
