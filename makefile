@@ -1,5 +1,5 @@
 TARGET = main
-LIBS = libs/reader.c libs/Token.c libs/lTokens.c
+LIBS = libs/reader.c libs/Token.c libs/lTokens.c libs/tSimbolos.c
 MAIN = main.c
 COMP = gcc
 FILETEST = cuadrado.c

@@ -7,6 +7,7 @@
 #include "Token.h"
 #include "reader.h"
 #include "lTokens.h"
+#include "tSimbolos.h"
 
 Token token;
 
@@ -300,6 +301,7 @@ void analex() {
 					}
 				}
 				token = createToken(IDT, ac);
+				tsInstall(ac, 0.0);
 				return;}
 				break;
 			case 28:
@@ -334,8 +336,10 @@ void start(Reader *reader) {
 
 		//pushToken(&list, token);
 		if(token.type==ERR){
-			printf("\nError in Line: %d, Caracter: %c\n", calcLine(), reader->data[reader->pos-2]);
+			printf("\nError in Line: %d, Caracter: %c\n", calcLine(), reader->data[reader->pos-1]);
+			exit(0);
 			return;
+
 		}else {
 			printf(" %s ",getToken(token));
 			if(getChar()=='\n')
@@ -345,6 +349,7 @@ void start(Reader *reader) {
 
 		}
 	}
+	tsPrint();
 	/*
 	while (list!=NULL) {
 		printf("%s\n", getToken(list->tk));
