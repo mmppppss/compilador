@@ -16,6 +16,7 @@ typedef struct tSimbolos{
 typedef tSimbolos* tSimbolo;
 int tsInstall(char* id, double val);
 double tsGetVal(char* id);
+double tsGetValPos(int pos);
 bool tsExist(char* id);
 int tsSetVal(char* id, double val);
 void tsSetValPos(int pos, double val);

@@ -45,7 +45,7 @@ void analex() {
 					estado=1;
 					avanzar();
                 }else if (c == '"') {
-                	ac = concat(ac,c);//ac[sizeof(ac)]=c;
+                	//ac = concat(ac,c);//ac[sizeof(ac)]=c; no concat ""
 					estado=4;
 					avanzar();
                 } else if (c == '+') {
@@ -140,7 +140,7 @@ void analex() {
 					estado=5;
 					avanzar();
 				}else if(c=='"'){
-					ac = concat(ac,c);;//ac[sizeof(ac)]=c;
+					//ac = concat(ac,c);;//ac[sizeof(ac)]=c; no concat ""
 					estado=6;
 					avanzar();
 				}else if (c=='\0') {

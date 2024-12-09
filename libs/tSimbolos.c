@@ -31,6 +31,19 @@ double tsGetVal(char* id){
     printf("Error: El símbolo '%s' no está en la tabla.\n", id);
     return 0.0; 
 }
+
+double tsGetValPos(int pos){
+	tSimbolo temp = tablaSimbolos;
+	int i = 0;
+	while (temp != NULL) {
+		if (i == pos) {
+			return temp->val;
+		}
+		temp = temp->sig;
+		i++;
+	}
+	return 0.0;
+}
 bool tsExist(char* id){
 	tSimbolo temp = tablaSimbolos;
 	while (temp != NULL) {
