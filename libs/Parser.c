@@ -1,4 +1,5 @@
 #include "Token.h"
+#include "reader.h"
 #include "tSimbolos.h"
 #include "tokenizer.c"
 #include <stdio.h>
@@ -21,10 +22,29 @@ bool isValid(tokenType tt) {
 			return false;
 	}
 }
+
+void limpiar(){
+	ope = 0;
+	operando1 = 0;
+	operando2 = 0;
+	toperador = 0;
+	resultado = 0;
+}
+
+void salto(){
+	//salt -> ir_a num
+	analex();
+	if(token.type==NUM){
+		int num = atoi(token.value);
+		irAlinea(num);
+	}else {
+		printf("Error in Line: %d, Se esperaba: \"NUM\" y se encontro %s\n", calcLine(), getToken(token));
+	}
+}
 //expresion
 void operando(){
 	//operando -> IDT | NUM
-	//printf("entrando a operando\n");
+	printf("entrando a operando\n");
 	double num;
 	if(token.type==IDT){
 		int pos = atoi(token.value);
@@ -41,7 +61,7 @@ void operando(){
 		operando2 = num;
 		ope = 0;
 	}
-
+	printf("saliendo de operando\n");
 	analex();
 }
 void operador(){
@@ -49,18 +69,21 @@ void operador(){
 	if(token.type==SUM || token.type==RES || token.type==MUL || token.type==DIV){
 		toperador = token.type;
 	}
+	printf("saliendo de operador\n");
 	analex();
 }
 void expresion(){
 	//expresion -> Operando Expr1()
 	//printf("entrando a expresion\n");
+	limpiar();
 	operando();
-	//printf("\ne1 token actual: %s\n", getToken(token));
+	printf("operando 1: %f\n", operando1);
+	printf("\ne1 token actual: %s\n", getToken(token));
 	if(token.type == SUM || token.type == RES || token.type == MUL || token.type == DIV){
 		operador();
-		//printf("\ne2token actual: %s\n", getToken(token));
+		printf("\ne2token actual: %s\n", getToken(token));
 		operando();
-		//printf("\ne3token actual: %s\n", getToken(token));
+		printf("\ne3token actual: %s\n", getToken(token));
 		switch (toperador) {
 			case SUM:
 				resultado = operando1 + operando2;
@@ -77,11 +100,36 @@ void expresion(){
 		}
 
 	}else {
+		printf("e6 token actual: %s\n", getToken(token));
 		resultado = operando1;
 	}
 	//printf("saliendo de expresion\n");
-
 }
+//fin expresion
+
+//asignacion
+void asignacion(){
+	//asignacion -> IDT = expresion
+	tsPrint();
+	int pos = atoi(token.value);
+	printf("entrando a asignacion, pos: %d\n", pos);
+	analex();
+	if(token.type==ASG){
+		analex();
+		expresion();
+		/*
+		if(token.type == NUM){
+			resultado = atof(token.value);
+			tsSetValPos(pos, resultado);
+		}*/
+		tsSetValPos(pos, resultado);
+	}else {
+		printf("Error in Line: %d, Se esperaba: \"ASG\" y se encontro %s\n", calcLine(), getToken(token));
+	}
+}
+//fin asignacion
+
+
 //escritura
 void tipoOpcion(){
 	if(token.type==CAD){
@@ -182,13 +230,13 @@ void sentencia(){
 			salida();
 		break;
 		case IRA:
-			printf("ir a ir_a\n");
+			salto();	
 		break;
 		case SI_:
 			printf("ir a si_\n");
 		break;
 		case IDT:
-			printf("ir a idt\n");
+			asignacion();
 		break;
 		default:
 			printf("error\n");

@@ -29,7 +29,15 @@ int getSize(){
 	stat(reader.filename, &st);
 	return st.st_size;
 }
+//salto de linea
 
+void irAlinea(int line) {
+    if (line > 0 && line <= reader.countlines) {
+        reader.pos = reader.lines[line - 1];
+    } else {
+        printf("Error: salto a linea inexistente.\n");
+    }
+}
 void loadFile() {
 	FILE *f;
 	f = fopen(reader.filename, "r");

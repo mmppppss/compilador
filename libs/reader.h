@@ -22,6 +22,7 @@ int calcLine();
 char *getLine(int line);
 void show();
 void avanzar();
+void irAlinea(int line);
 void retroceder();
 char getChar();
 #endif /* ifndef Reader */
