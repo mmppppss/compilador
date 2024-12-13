@@ -10,6 +10,9 @@ tokenType toperador;
 double operando2;
 double resultado;
 bool isValid(tokenType tt) {
+	/*printf("entrando a isValid\n");
+	printf("tt: %d\n", tt);
+	printf("%s\n", getToken(token));*/
 	switch (tt) {
 		case LEE:
 		case ESC:
@@ -27,7 +30,7 @@ void limpiar(){
 	ope = 0;
 	operando1 = 0;
 	operando2 = 0;
-	toperador = 0;
+	toperador = ERR;
 	resultado = 0;
 }
 
@@ -44,7 +47,6 @@ void salto(){
 //expresion
 void operando(){
 	//operando -> IDT | NUM
-	printf("entrando a operando\n");
 	double num;
 	if(token.type==IDT){
 		int pos = atoi(token.value);
@@ -61,22 +63,48 @@ void operando(){
 		operando2 = num;
 		ope = 0;
 	}
-	printf("saliendo de operando\n");
-	analex();
+	//analex(); //esto lo puse en expresion para evitar un fallo de doble analex avance
 }
 void operador(){
 	//operador -> SUM | RES | MUL | DIV
 	if(token.type==SUM || token.type==RES || token.type==MUL || token.type==DIV){
 		toperador = token.type;
 	}
-	printf("saliendo de operador\n");
 	analex();
+}
+void expresion1(){
+	if(token.type == SUM || token.type == RES || token.type == MUL || token.type == DIV){
+		operador();
+		operando();
+	}
 }
 void expresion(){
 	//expresion -> Operando Expr1()
 	//printf("entrando a expresion\n");
 	limpiar();
 	operando();
+	analex();
+	expresion1();
+	if(toperador != ERR){
+		switch (toperador) {
+			case SUM:
+				resultado = operando1 + operando2;
+			break;
+			case RES:
+				resultado = operando1 - operando2;
+			break;
+			case MUL:
+				resultado = operando1 * operando2;
+			break;
+			case DIV:
+				resultado = operando1 / operando2;
+			break;
+		}
+
+	}else {
+		resultado = operando1;
+	}
+	/*
 	printf("operando 1: %f\n", operando1);
 	printf("\ne1 token actual: %s\n", getToken(token));
 	if(token.type == SUM || token.type == RES || token.type == MUL || token.type == DIV){
@@ -102,7 +130,7 @@ void expresion(){
 	}else {
 		printf("e6 token actual: %s\n", getToken(token));
 		resultado = operando1;
-	}
+	}*/
 	//printf("saliendo de expresion\n");
 }
 //fin expresion
@@ -110,9 +138,7 @@ void expresion(){
 //asignacion
 void asignacion(){
 	//asignacion -> IDT = expresion
-	tsPrint();
 	int pos = atoi(token.value);
-	printf("entrando a asignacion, pos: %d\n", pos);
 	analex();
 	if(token.type==ASG){
 		analex();
@@ -237,6 +263,7 @@ void sentencia(){
 		break;
 		case IDT:
 			asignacion();
+
 		break;
 		default:
 			printf("error\n");
@@ -249,14 +276,17 @@ void codigo() {
 	//codigo -> sentencia codigo | lambda
 	//printf("entrando a codigo\n");
 	analex();
+	if(token.type == ERR) {
+		return;
+	}
 	//printf("token: %s", getToken(token));
 	if (isValid(token.type)) {
 		//printf("entrando a sentencia\n");
 		sentencia();
 		codigo();
-	}
-	else {
+	}else {
 		//printf("saliendo de codigo\n");
+		printf("Error in Line: %d, Se esperaba: \"LEE\", \"ESC\", \"IRA\", \"SI_\", \"IDT\" y se encontro %s\n", calcLine(), getToken(token));
 		return;
 	}
 }
