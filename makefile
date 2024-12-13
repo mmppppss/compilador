@@ -13,6 +13,6 @@ clean:
 
 # Regla para ejecutar el programa
 run: clean $(TARGET)
-	./$(TARGET) $(FILETEST) -t -v -s
+	./$(TARGET) $(FILETEST) prueba.x -v -t
 
 .PHONY: all clean run

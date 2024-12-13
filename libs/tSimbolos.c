@@ -9,7 +9,8 @@ tSimbolo tablaSimbolos;
 
 int tsInstall(char* id, double val){
 	if (tsExist(id)) {
-		return tsSetVal(id, val);
+		//printf("El símbolo '%s' con VALOR %.2f ya está en la tabla., asignando VALOR %.2f\n", id, tsGetVal(id), val);
+		return tsGetPos(id);
 	}else{
         tSimbolo aux = malloc(sizeof(tSimbolos));
         aux->id = strdup(id); // Duplicar la cadena para evitar problemas de punteros
@@ -68,6 +69,20 @@ int tsSetVal(char* id, double val){
     }
 	return -1;
 }
+int tsGetPos(char* id){
+	tSimbolo temp = tablaSimbolos;
+	int pos = 0;
+	
+	while (temp != NULL) {
+        if (strcmp(temp->id, id) == 0) {
+            return pos; 
+        }
+        temp = temp->sig;
+        pos++;
+    }
+	return -1;
+}
+
 void tsPrint(){
 	tSimbolo temp = tablaSimbolos;
 	printf("\tID\t\tVALOR\n");

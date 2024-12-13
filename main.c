@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 		char *opt2= "-v";
 		char *opt3= "-t";
 		if(strcmp(argv[i],opt)==0){
-			int *ln;
+			int *ln = NULL;
 			printf("Mostrar linea x: ");
 			scanf("%i", ln);
 			printf("%s", getLine(*ln));
