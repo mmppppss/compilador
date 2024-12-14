@@ -31,6 +31,7 @@ typedef enum {
 	IRA,
 	SI_,
 	ENT,
+	FIN,
 	COM
 }tokenType;
 /*typedef enum{

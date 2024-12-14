@@ -38,6 +38,7 @@ const char* tokenToString(tokenType t) {
 		case SI_: return "SI_";
 		case ENT: return "ENT";
 		case COM: return "COM";
+		case FIN: return "FIN";
         default: return "UNKNOWN";
     }
 }

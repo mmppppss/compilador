@@ -2,11 +2,13 @@
 #include "reader.h"
 #include "tSimbolos.h"
 #include "tokenizer.c"
+#include "Parser.h"
 #include <stdio.h>
 
 int ope = 0;
 double operando1;
 tokenType toperador;
+tokenType roperador;
 double operando2;
 double resultado;
 bool isValid(tokenType tt) {
@@ -19,6 +21,7 @@ bool isValid(tokenType tt) {
 		case IDT:
 		case SI_:
 		case IRA:
+		case FIN:
 			return true;
 		break;
 		default:
@@ -134,6 +137,72 @@ void expresion(){
 	//printf("saliendo de expresion\n");
 }
 //fin expresion
+
+//condicional
+void operadorRelacional(){
+	//operadorRelacional -> MAYOR | MENOR | MAYORIGUAL | MENORIGUAL
+	if(token.type==MYR || token.type==MNR || token.type==MYI || token.type==MNI){
+		roperador = token.type;
+	}else {
+		printf("Error in Line: %d, Se esperaba: \"MAYOR\", \"MENOR\", \"MAYORIGUAL\" o \"MENORIGUAL\" y se encontro %s\n", calcLine(), getToken(token));
+	}
+}
+
+void condicional() {
+	// condicional -> si expresion opRelacional expresion entonces sentencia();
+	analex(); // Token "si"
+	expresion(); // Evaluar la primera expresión
+	double res1 = resultado; // Guardar el resultado de la primera expresión
+
+	if (token.type == MYR || token.type == MNR || token.type == MYI || token.type == MNI || token.type == IGU) {
+		// Si el token es uno de los operadores relacionales
+		roperador = token.type;
+		analex(); // Avanzar al siguiente token (esperando la segunda expresión)
+		expresion(); // Evaluar la segunda expresión
+		double res2 = resultado; // Guardar el resultado de la segunda expresión
+
+		bool analizado = false;
+
+		// Comparar las dos expresiones con el operador relacional
+		switch (roperador) {
+			case MYR:
+				analizado = res1 > res2;
+				break;
+			case MNR:
+				analizado = res1 < res2;
+				break;
+			case MYI:
+				analizado = res1 >= res2;
+				break;
+			case MNI:
+				analizado = res1 <= res2;
+				break;
+			case IGU:
+				analizado = res1 == res2;
+				break;
+		}
+
+		if (analizado) {
+			// Si la condición es verdadera, proceder con la sentencia
+			if (token.type == ENT) {
+				analex(); // Token "ENTONCES"
+				sentencia(); // Ejecutar la sentencia asociada
+			} else {
+				// Si no encontramos "ENTONCES", error
+				printf("Error in Line: %d, Se esperaba: \"ENTONCES\" y se encontro %s\n", calcLine(), getToken(token));
+			}
+		} else {
+			// Si la condición es falsa, saltar las sentencias hasta encontrar FIN
+			while (token.type != FIN) {
+				analex();
+			}
+		}
+	} else {
+		// Si no encontramos un operador relacional válido, mostrar error
+		printf("Error in Line: %d, Se esperaba: \"MAYOR\", \"MENOR\", \"MAYORIGUAL\" o \"MENORIGUAL\" y se encontro %s\n", calcLine(), getToken(token));
+	}
+}
+//fin condicional
 
 //asignacion
 void asignacion(){
@@ -259,11 +328,12 @@ void sentencia(){
 			salto();	
 		break;
 		case SI_:
-			printf("ir a si_\n");
+			condicional();
 		break;
 		case IDT:
 			asignacion();
-
+		break;
+		case FIN:
 		break;
 		default:
 			printf("error\n");

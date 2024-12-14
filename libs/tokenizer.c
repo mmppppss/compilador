@@ -277,9 +277,10 @@ void analex() {
 					"escribir",
 					"ir_a",
 					"si",
-					"entonces"
+					"entonces",
+					"fin_si"
 				};
-				for(int i = 0;  i < 5; i++) {
+				for(int i = 0;  i < 6; i++) {
 					if(strcmp(reservadas[i], ac)==0){
 						token = createToken(IDT, "_");
 						switch (i) {
@@ -297,6 +298,9 @@ void analex() {
 							break;
 							case 4:
 								token.type=ENT;
+							break;
+							case 5:
+								token.type=FIN;
 							break;
 						}
 						return;
