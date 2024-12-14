@@ -20,7 +20,7 @@ int getSize();
 void loadFile();
 int calcLine();
 char *getLine(int line);
-void show();
+void showCode();
 void avanzar();
 void irAlinea(int line);
 void retroceder();

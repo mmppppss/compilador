@@ -6,7 +6,7 @@ FILETEST = cuadrado.c
 all: clean $(TARGET)
 
 $(TARGET) : $(LIBS)
-	$(COMP) -o $(TARGET) $(MAIN) $(LIBS)
+	$(COMP) -o $(TARGET) $(MAIN) $(LIBS) -lm
 
 clean:
 	rm -f $(TARGET)

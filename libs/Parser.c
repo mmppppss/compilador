@@ -12,16 +12,13 @@ tokenType roperador;
 double operando2;
 double resultado;
 bool isValid(tokenType tt) {
-	/*printf("entrando a isValid\n");
-	printf("tt: %d\n", tt);
-	printf("%s\n", getToken(token));*/
 	switch (tt) {
 		case LEE:
 		case ESC:
 		case IDT:
 		case SI_:
 		case IRA:
-		case FIN:
+		//case FIN:
 			return true;
 		break;
 		default:
@@ -88,6 +85,7 @@ void expresion(){
 	operando();
 	analex();
 	expresion1();
+	resultado = operando1;
 	if(toperador != ERR){
 		switch (toperador) {
 			case SUM:
@@ -103,38 +101,7 @@ void expresion(){
 				resultado = operando1 / operando2;
 			break;
 		}
-
-	}else {
-		resultado = operando1;
 	}
-	/*
-	printf("operando 1: %f\n", operando1);
-	printf("\ne1 token actual: %s\n", getToken(token));
-	if(token.type == SUM || token.type == RES || token.type == MUL || token.type == DIV){
-		operador();
-		printf("\ne2token actual: %s\n", getToken(token));
-		operando();
-		printf("\ne3token actual: %s\n", getToken(token));
-		switch (toperador) {
-			case SUM:
-				resultado = operando1 + operando2;
-			break;
-			case RES:
-				resultado = operando1 - operando2;
-			break;
-			case MUL:
-				resultado = operando1 * operando2;
-			break;
-			case DIV:
-				resultado = operando1 / operando2;
-			break;
-		}
-
-	}else {
-		printf("e6 token actual: %s\n", getToken(token));
-		resultado = operando1;
-	}*/
-	//printf("saliendo de expresion\n");
 }
 //fin expresion
 
@@ -150,20 +117,18 @@ void operadorRelacional(){
 
 void condicional() {
 	// condicional -> si expresion opRelacional expresion entonces sentencia();
-	analex(); // Token "si"
-	expresion(); // Evaluar la primera expresión
-	double res1 = resultado; // Guardar el resultado de la primera expresión
+	analex();
+	expresion(); 
+	double res1 = resultado; 
 
 	if (token.type == MYR || token.type == MNR || token.type == MYI || token.type == MNI || token.type == IGU) {
-		// Si el token es uno de los operadores relacionales
+
 		roperador = token.type;
-		analex(); // Avanzar al siguiente token (esperando la segunda expresión)
-		expresion(); // Evaluar la segunda expresión
-		double res2 = resultado; // Guardar el resultado de la segunda expresión
+		analex(); 
+		expresion();
+		double res2 = resultado; 
 
 		bool analizado = false;
-
-		// Comparar las dos expresiones con el operador relacional
 		switch (roperador) {
 			case MYR:
 				analizado = res1 > res2;

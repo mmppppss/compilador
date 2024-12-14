@@ -3,6 +3,7 @@
 #include "tSimbolos.h"
 #include "tokenizer.c"
 #include "Parser.h"
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -47,6 +48,10 @@ void sentencia(){
 		case IDT:
 			asignacion();
 		break;
+		case FIN:
+			analex();
+			//lambda si es fin de si
+		break;
 		default:
 			printf("error\n");
 		break;
@@ -62,9 +67,7 @@ void lectura(){
 		if(token.type==IDT){
 			double numero;
 			scanf("%lf", &numero);
-			//printf("Se leyo el valor: %lf\n", numero);
 			int pos = atoi(token.value);
-			//printf("pos para el valor: %d\n", pos);
 			tsSetValPos(pos, numero);
 			masID();
 			if(token.type==PCI){
@@ -141,12 +144,11 @@ void Opcion(){
 
 void expresion(){
 	//expresion -> operando operador operando
-	//limpiar();
-	printf("\n");
-	tsPrint();
-	printf("\n");
+	limpiar();
 	operando();
 	expresion1();
+
+	resultado = operando1;
 	if(toperador != ERR){
 		switch (toperador) {
 			case SUM:
@@ -159,16 +161,21 @@ void expresion(){
 				resultado = operando1 * operando2;
 			break;
 			case DIV:
+				if(operando2 == 0){
+					printf("Error in Line: %d, No se puede dividir entre 0\n", calcLine());
+					exit(1);
+				}
 				resultado = operando1 / operando2;
 			break;
+			case MOD:
+				resultado = fmod(operando1, operando2);
+			break;
 		}
-	}else {
-		resultado = operando1;
 	}
 }
 
 void expresion1(){
-	if(token.type == SUM || token.type == RES || token.type == MUL || token.type == DIV){
+	if(token.type == SUM || token.type == RES || token.type == MUL || token.type == DIV || token.type == MOD){
 		operador();
 		operando();
 	}
@@ -180,10 +187,8 @@ void operando(){
 	if(token.type==IDT){
 		int pos = atoi(token.value);
 		num = tsGetValPos(pos);
-		printf("op1Se obtuvo el valor: %lf de la posicion: %d\n", num, pos);
 	}else if(token.type==NUM){
 		num = atof(token.value);
-		printf("opSe obtuvo el valor: %lf\n", num);
 	}else {
 		printf("Error in Line: %d, Se esperaba: \"IDT\" o \"NUM\" y se encontro %s\n", calcLine(), getToken(token));
 		exit(1);
@@ -200,7 +205,7 @@ void operando(){
 
 void operador(){
 	//operador -> SUM | RES | MUL | DIV
-	if(token.type==SUM || token.type==RES || token.type==MUL || token.type==DIV){
+	if(token.type==SUM || token.type==RES || token.type==MUL || token.type==DIV || token.type==MOD){
 		toperador = token.type;
 	}
 	analex();
@@ -208,9 +213,12 @@ void operador(){
 
 void salto(){
 	//salto -> ir_a NUM
+	printf("%s\n", getToken(token));
 	analex();
 	if(token.type==NUM){
 		int num = atoi(token.value);
+		printf("Se salto a la linea: %d\n", num);
+		printf("LINEA: %s", getLine(num));
 		irAlinea(num);
 	}else {
 		printf("Error in Line: %d, Se esperaba: \"NUM\" y se encontro %s\n", calcLine(), getToken(token));
@@ -223,6 +231,8 @@ void condicional(){
 	expresion();
 	double res1 = resultado;
 //	operadorRelacional();
+	
+	roperador = token.type;
 	if(token.type==MYR || token.type==MNR || token.type==MYI || token.type==MNI || token.type==IGU || token.type==DIF){
 		roperador = token.type;
 		analex();
@@ -248,6 +258,9 @@ void condicional(){
 			case DIF:
 				cond = res1 != res2;
 			break;
+			default:
+				printf("Error in Line: %d, Se esperaba: \"MAYOR\", \"MENOR\", \"MAYORIGUAL\", \"MENORIGUAL\", IGU, DIF y se encontro %s\n", calcLine(), getToken(token));
+			break;
 		}
 		if(cond){
 			if(token.type==ENT){
@@ -261,10 +274,10 @@ void condicional(){
 			while(token.type!=FIN){
 				analex();
 			}
-			analex();
+			analex();//salta el FIN_SI
 		}
 	}else {
-		printf("Error in Line: %d, Se esperaba: \"MAYOR\", \"MENOR\", \"MAYORIGUAL\" o \"MENORIGUAL\" y se encontro %s\n", calcLine(), getToken(token));
+		printf("11Error in Line: %d, Se esperaba: \"MAYOR\", \"MENOR\", \"MAYORIGUAL\" o \"MENORIGUAL\" IGU DIF y se encontro %s\n", calcLine(), getToken(token));
 		exit(1);
 	}
 }
@@ -280,21 +293,15 @@ void operadorRelacional(){
 }
 void asignacion(){
 	//asignacion -> IDT = expresion
+	int pos = atoi(token.value);
 	analex();
 	if(token.type==ASG){
-		printf("asignacion: %s\n", token.value);
 		analex();
-		printf("token: %s\n", getToken(token));
 		expresion();
-		printf("token: %s\n", getToken(token));
-
-		int pos = atoi(token.value);
-		printf("pos: %d\n", pos);
 		tsSetValPos(pos, resultado);
-		printf("resultado: %f\n", resultado);
-		//printf("Se asigno el valor: %f en la posicion: %d\n", resultado, pos);
+		printf("Se asigno el valor: %f en la posicion: %d\n", resultado, pos);
 	}else {
-		printf("Error in Line: %d, Se esperaba: \":=\" y se encontro %s\n", calcLine(), getToken(token));
+		printf("Error in Line: %d, Se esperaba: \"=\" y se encontro %s\n", calcLine(), getToken(token));
 		exit(1);
 	}
 }
@@ -308,6 +315,7 @@ bool isValid(tokenType tt){
 		case IDT:
 		case SI_:
 		case IRA:
+		case FIN:
 			return true;
 		break;
 		default:
@@ -319,7 +327,7 @@ void limpiar(){
 	operando1 = 0;
 	operando2 = 0;
 	toperador = ERR;
-	roperador = ERR;
+	//roperador = ERR;
 	resultado = 0;
 }
 

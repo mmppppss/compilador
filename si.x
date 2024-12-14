@@ -1,5 +1,6 @@
 si 3>2 entonces
-escribir("3>2")
-escribir("3>2")
+	escribir("3 es mayor que 2")
 fin_si
-escribir("1<2")
+si 3<2 entonces
+	escribir("3 es menor que 2")
+fin_si

@@ -91,7 +91,7 @@ char *getLine(int line) {
 	return codeLine;
 }
 
-void show(){
+void showCode(){
 	char *bar = "\033[32m|";
 	int ccc=1;
 	printf("%i\t",ccc++);

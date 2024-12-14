@@ -1,109 +1,96 @@
-#include "tSimbolos.h"
+// tSimbolos.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
+#include "tSimbolos.h"
 
-tSimbolo tablaSimbolos;
+static tSimbolos tablaSimbolos;
 
-
-int tsInstall(char* id, double val){
-	if (tsExist(id)) {
-		//printf("El símbolo '%s' con VALOR %.2f ya está en la tabla., asignando VALOR %.2f\n", id, tsGetVal(id), val);
-		return tsGetPos(id);
-	}else{
-        tSimbolo aux = malloc(sizeof(tSimbolos));
-        aux->id = strdup(id); // Duplicar la cadena para evitar problemas de punteros
-        aux->val = val;
-        aux->sig = tablaSimbolos; // Insertar al inicio de la lista
-        tablaSimbolos = aux;
-		return 0;
-	}
+void tsCrear(int capacidadInicial) {
+    tablaSimbolos.simbolos = (tSimbolo*)malloc(capacidadInicial * sizeof(tSimbolo));
+    tablaSimbolos.capacidad = capacidadInicial;
+    tablaSimbolos.tamanio = 0;
 }
 
-double tsGetVal(char* id){
-    tSimbolo temp = tablaSimbolos;
-    while (temp != NULL) {
-        if (strcmp(temp->id, id) == 0) {
-            return temp->val; 
-        }
-        temp = temp->sig;
+void tsDestruir() {
+    for (int i = 0; i < tablaSimbolos.tamanio; i++) {
+        free(tablaSimbolos.simbolos[i].id);
     }
-    printf("Error: El símbolo '%s' no está en la tabla.\n", id);
-    return 0.0; 
+    free(tablaSimbolos.simbolos);
+    tablaSimbolos.simbolos = NULL;
+    tablaSimbolos.capacidad = 0;
+    tablaSimbolos.tamanio = 0;
 }
 
-double tsGetValPos(int pos){
-	tSimbolo temp = tablaSimbolos;
-	int i = 0;
-	while (temp != NULL) {
-		if (i == pos) {
-			return temp->val;
-		}
-		temp = temp->sig;
-		i++;
-	}
-	return 0.0;
+static void tsExpandir() {
+    tablaSimbolos.capacidad *= 2;
+    tablaSimbolos.simbolos = (tSimbolo*)realloc(tablaSimbolos.simbolos, tablaSimbolos.capacidad * sizeof(tSimbolo));
 }
-bool tsExist(char* id){
-	tSimbolo temp = tablaSimbolos;
-	while (temp != NULL) {
-		if (strcmp(temp->id, id) == 0) {
-			return true;
-		}
-		temp = temp->sig;
-	}
-	return false;
-}
-int tsSetVal(char* id, double val){
-	tSimbolo temp = tablaSimbolos;
-	int pos = 0;
-	
-	while (temp != NULL) {
-        if (strcmp(temp->id, id) == 0) {
-            temp->val = val;
-            return pos; 
-        }
-        temp = temp->sig;
-        pos++;
+
+int tsInstall(char* id, double val) {
+    if (tsExist(id)) {
+        return tsGetPos(id); // Si ya existe, devuelve la posición.
     }
-	return -1;
-}
-int tsGetPos(char* id){
-	tSimbolo temp = tablaSimbolos;
-	int pos = 0;
-	
-	while (temp != NULL) {
-        if (strcmp(temp->id, id) == 0) {
-            return pos; 
-        }
-        temp = temp->sig;
-        pos++;
+    if (tablaSimbolos.tamanio == tablaSimbolos.capacidad) {
+        tsExpandir();
     }
-	return -1;
+    tablaSimbolos.simbolos[tablaSimbolos.tamanio].id = strdup(id);
+    tablaSimbolos.simbolos[tablaSimbolos.tamanio].val = val;
+    return tablaSimbolos.tamanio++;
 }
 
-void tsPrint(){
-	tSimbolo temp = tablaSimbolos;
-	printf("\tID\t\tVALOR\n");
-	while (temp != NULL) {
-		printf("\t%s\t|\t%f\t\n", temp->id, temp->val);
-		temp = temp->sig;
-	}
-}
-char* tsGetId(){
-	return tablaSimbolos->id;
+double tsGetVal(char* id) {
+    int pos = tsGetPos(id);
+    if (pos != -1) {
+        return tablaSimbolos.simbolos[pos].val;
+    }
+    fprintf(stderr, "Error: Símbolo '%s' no encontrado.\n", id);
+    exit(EXIT_FAILURE);
 }
 
-void tsSetValPos(int pos, double val){
-	tSimbolo temp = tablaSimbolos;
-	int i = 0;
-	while (temp != NULL) {
-		if (i == pos) {
-			temp->val = val;
-			return;
-		}
-		temp = temp->sig;
-		i++;
-	}
+double tsGetValPos(int pos) {
+    if (pos >= 0 && pos < tablaSimbolos.tamanio) {
+        return tablaSimbolos.simbolos[pos].val;
+    }
+    fprintf(stderr, "Error: Posición %d inválida.\n", pos);
+    exit(EXIT_FAILURE);
 }
+
+bool tsExist(char* id) {
+    return tsGetPos(id) != -1;
+}
+
+int tsSetVal(char* id, double val) {
+    int pos = tsGetPos(id);
+    if (pos != -1) {
+        tablaSimbolos.simbolos[pos].val = val;
+        return pos;
+    }
+    return tsInstall(id, val); // Si no existe, lo instala.
+}
+
+void tsSetValPos(int pos, double val) {
+    if (pos >= 0 && pos < tablaSimbolos.tamanio) {
+        tablaSimbolos.simbolos[pos].val = val;
+    } else {
+        fprintf(stderr, "Error: Posición %d inválida.\n", pos);
+        exit(EXIT_FAILURE);
+    }
+}
+
+int tsGetPos(char* id) {
+    for (int i = 0; i < tablaSimbolos.tamanio; i++) {
+        if (strcmp(tablaSimbolos.simbolos[i].id, id) == 0) {
+            return i;
+        }
+    }
+    return -1; // No encontrado.
+}
+
+void tsPrint() {
+    printf("Tabla de símbolos:\n");
+    for (int i = 0; i < tablaSimbolos.tamanio; i++) {
+        printf("[%d] ID: %s, Valor: %.2f\n", i, tablaSimbolos.simbolos[i].id, tablaSimbolos.simbolos[i].val);
+    }
+}
+

@@ -71,6 +71,7 @@ void analex() {
 					avanzar();
 				} else if (c == '=') {
 					estado=18;
+					avanzar();
 				} else if (c == '!') {
 					estado=21;
 					avanzar();
@@ -229,6 +230,7 @@ void analex() {
 				} else {
 					estado = 19;
 				}
+				break;
 			case 19:
 				token = createToken(ASG, "_");
 				return;
@@ -343,30 +345,19 @@ void analex() {
 } 
 
 
-void start(Reader *reader) { 
+void tokenizar(Reader *reader) { 
 	lToken list=malloc(sizeof(lisToken));
 	while(reader->pos < reader->count-1){
 		analex();
 
 		//pushToken(&list, token);
-		if(token.type==ERR){
-			printf("\nError in Line: %d, Caracter: %c\n", calcLine(), reader->data[reader->pos-1]);
-			exit(0);
-			return;
-
-		}else {
+		if(token.type!=ERR) {
 			printf(" %s ",getToken(token));
 			if(getChar()=='\n')
 				printf("\n");
 			if(getChar()=='\t')
 				printf("\t");
-
 		}
 	}
-	tsPrint();
-	/*
-	while (list!=NULL) {
-		printf("%s\n", getToken(list->tk));
-		list=list->sig;
-	}*/
+	irAlinea(1);
 }

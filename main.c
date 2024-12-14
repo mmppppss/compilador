@@ -18,14 +18,13 @@ int main(int argc, char *argv[]) {
 			printf("%s", getLine(*ln));
 		}
 		if(strcmp(argv[i],opt2)==0){
-			show();
+			showCode();
 		}
 		if(strcmp(argv[i],opt3)==0){
-			iniciar(reader);
+			tokenizar(reader);
 		}
 	}
-
-
+	iniciar(reader);
     return 0;
 }
 

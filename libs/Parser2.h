@@ -4,6 +4,7 @@
 #include "Token.h"
 #include "reader.h"
 #include "tSimbolos.h"
+#include <math.h>
 
 extern int ope;
 extern double operando1;
