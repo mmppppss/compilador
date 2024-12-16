@@ -19,7 +19,7 @@ void iniciar(Reader *reader){
 	analex();
 	codigo();
 	//imprimir tabla de simbolos
-	tsPrint();
+	//tsPrint();
 }
 
 void codigo(){
@@ -213,13 +213,11 @@ void operador(){
 
 void salto(){
 	//salto -> ir_a NUM
-	printf("%s\n", getToken(token));
 	analex();
 	if(token.type==NUM){
 		int num = atoi(token.value);
-		printf("Se salto a la linea: %d\n", num);
-		printf("LINEA: %s", getLine(num));
 		irAlinea(num);
+		analex();
 	}else {
 		printf("Error in Line: %d, Se esperaba: \"NUM\" y se encontro %s\n", calcLine(), getToken(token));
 	}
