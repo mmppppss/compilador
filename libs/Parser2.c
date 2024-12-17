@@ -279,6 +279,71 @@ void condicional(){
 		exit(1);
 	}
 }
+void condicional2(){
+	//condicional -> si expresion opRelacional expresion entonces sentencia()
+	analex();
+	expresion();
+	printf("cond expr");
+	double res1 = resultado;
+//	operadorRelacional();
+	
+	roperador = token.type;
+	if(token.type==MYR || token.type==MNR || token.type==MYI || token.type==MNI || token.type==IGU || token.type==DIF){
+		printf("cond bool\n");
+		roperador = token.type;
+		analex();
+		expresion();
+		double res2 = resultado;
+		bool cond = false;
+		switch (roperador) {
+			case MYR:
+				cond = res1 > res2;
+			break;
+			case MNR:
+				printf("cond mnr\n");
+				cond = res1 < res2;
+				printf("%b\n", cond);
+			break;
+			case MYI:
+				cond = res1 >= res2;
+			break;
+			case MNI:
+				cond = res1 <= res2;
+			break;
+			case IGU:
+				cond = res1 == res2;
+			break;
+			case DIF:
+				cond = res1 != res2;
+			break;
+			default:
+				printf("Error in Line: %d, Se esperaba: \"MAYOR\", \"MENOR\", \"MAYORIGUAL\", \"MENORIGUAL\", IGU, DIF y se encontro %s\n", calcLine(), getToken(token));
+			break;
+		}
+		if(cond){
+			if(token.type==ENT){
+				printf("cond ent\n");
+				analex();
+				printf("tokenA %s\n", getToken(token));
+				sentencia();
+			}else {
+				printf("Error in Line: %d, Se esperaba: \"ENT\" y se encontro %s\n", calcLine(), getToken(token));
+				exit(1);
+			}
+		}else {
+			printf("cond false\n");
+			printf("token %s\n", getToken(token));
+			int line = calcLine();
+			printf("saltando  a linea %d\n", line);
+			irAlinea(line);
+			analex();
+		}
+	}else {
+		printf("11Error in Line: %d, Se esperaba: \"MAYOR\", \"MENOR\", \"MAYORIGUAL\" o \"MENORIGUAL\" IGU DIF y se encontro %s\n", calcLine(), getToken(token));
+		exit(1);
+	}
+
+}
 void operadorRelacional(){
 	//opRelacional -> MAYOR | MENOR | MAYORIGUAL | MENORIGUAL ==
 	if(token.type==MYR || token.type==MNR || token.type==MYI || token.type==MNI || token.type==IGU || token.type==DIF){

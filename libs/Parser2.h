@@ -22,6 +22,7 @@ void expresion1();
 void expresion();
 void operadorRelacional();
 void condicional();
+void condicional2();
 void asignacion();
 void tipoOpcion();
 void Opcion();
