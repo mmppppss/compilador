@@ -297,7 +297,7 @@ void asignacion(){
 		analex();
 		expresion();
 		tsSetValPos(pos, resultado);
-		printf("Se asigno el valor: %f en la posicion: %d\n", resultado, pos);
+		//printf("Se asigno el valor: %f en la posicion: %d\n", resultado, pos);
 	}else {
 		printf("Error in Line: %d, Se esperaba: \"=\" y se encontro %s\n", calcLine(), getToken(token));
 		exit(1);
