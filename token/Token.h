@@ -30,13 +30,16 @@ typedef enum{
 	PAP,
 	PCI,
 	COM,
-}token;
+	ERR,
+
+	NOT, AND, OR_
+}tokentype;
 
 typedef struct {
-	token type;
+	tokentype type;
     char *value;
 } Token;
 
-Token createToken(token type, char *value);
+Token createToken(tokentype type, char *value);
 char *getToken(Token token);
 Token reservada(char *name);

@@ -1,7 +1,9 @@
-#include "Reader.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <string.h>
+
+#include "Reader.h"
 Reader reader;
 
 Reader *newReader(char *filename){
@@ -85,4 +87,12 @@ void irALinea(int linea){
     } else {
         printf("[ERROR2]: salto a linea inexistente.\n");
     }
+}
+
+char* concat(char* s, char c) {
+    char* x = malloc(strlen(s) + 2); // +1 para el carácter y +1 para el terminador nulo
+    strcpy(x, s);
+    x[strlen(s)] = c;
+    x[strlen(s) + 1] = '\0';
+    return x;
 }

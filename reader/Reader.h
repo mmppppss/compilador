@@ -22,4 +22,5 @@ void getLinea(int linea);
 char getCC();
 int calcLinea();
 int getSize();
+char* concat(char* s, char c);
 #endif /* ifndef READER_H */

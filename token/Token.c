@@ -3,13 +3,13 @@
 #include <string.h>
 #include "Token.h"
 
-Token createToken(token type, char *value) {
+Token createToken(tokentype type, char *value) {
     Token newToken;
 	newToken.type = type;
     newToken.value = value;
     return newToken;
 }
-const char* tokenToString(token t) {
+const char* tokenToString(tokentype t) {
     switch (t) {
         case NUM: return "NUM";
         case CAD: return "CAD";
@@ -35,6 +35,7 @@ const char* tokenToString(token t) {
 		case ENT: return "ENT";
 		case COM: return "COM";
 		case FSI: return "FIN";
+		case ERR: return "ERR";
         default: return "UNKNOWN";
     }
 }
