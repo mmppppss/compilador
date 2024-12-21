@@ -4,11 +4,11 @@
 struct Reader{
 	char *filename;
 	char *content;
-	int size;
 	int *lines;
 	int countlines;
 	int pos;
 	int count;
+	int size;
 };
 typedef struct Reader Reader;
 
@@ -16,8 +16,10 @@ Reader *newReader(char *filename);
 void loadFile();
 void avanzar();
 void irALinea(int linea);
+void mostrar();
+void mostrarCodigo();
+void getLinea(int linea);
 char getCC();
 int calcLinea();
 int getSize();
-void mostrar();
 #endif /* ifndef READER_H */

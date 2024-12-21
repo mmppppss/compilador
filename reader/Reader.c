@@ -48,11 +48,41 @@ void mostrar(){
 	printf("%s", reader.content);
 }
 
+void mostrarCodigo(){
+	char *bar = "\033[32m|";
+	int ccc=1;
+	printf("%i\t",ccc++);
+	for (int i = 0; i < reader.count-1 ; i++) {
+		printf("%s\033[0m%c", bar, reader.content[i]);
+		if(reader.content[i]=='\n'){
+			printf("%i\t", ccc++);
+		}
+	}
+	printf("\033[0m\n");
+}
+
 void avanzar(){
 	reader.pos++;
 }
 char getCC(){
 	return reader.content[reader.pos];
 }
-int calcLinea();
-void irALinea(int linea);
+
+int calcLinea(){
+	int i=0;
+	for(int j=0; j<reader.countlines; j++){
+		if(reader.lines[j]>= reader.pos){
+			return i+1;
+		}else{
+			i++;
+		}
+	}
+	return i;
+}
+void irALinea(int linea){
+    if (linea > 0 && linea <= reader.countlines) {
+        reader.pos = reader.lines[linea - 1];
+    } else {
+        printf("[ERROR2]: salto a linea inexistente.\n");
+    }
+}
