@@ -24,29 +24,61 @@ int getSize(){
 	return st.st_size;
 }
 
-void loadFile(){
-	FILE *f;
-	f = fopen(reader.filename, "r");
-	
-	if(f == NULL){
-		printf("[ERROR1] No se pudo abrir el archivo %s\n", reader.filename);
-		exit(1);
-	}
+void loadFile() {
+    FILE *f;
+    f = fopen(reader.filename, "r");
+    
+    if (f == NULL) {
+        printf("[ERROR1] No se pudo abrir el archivo %s\n", reader.filename);
+        exit(1);
+    }
 
-	char c; 
-	reader.lines = (int *)malloc(sizeof(int));
-	reader.lines[reader.countlines++] = 0;
-	reader.content = (char *)malloc(sizeof(char)*reader.size);
-	while((c = fgetc(f)) != EOF){
-		if(c == '\n'){
-			reader.lines[reader.countlines++] = reader.count+1;
-		}
-		reader.content[reader.count++] = c;
-	}
-	reader.content[reader.count] = '\0';
-	fclose(f);
+    char c;
+    reader.count = 0;
+    reader.countlines = 0;
+    reader.lines = (int *)malloc(sizeof(int) * 100); // Inicialmente asignar memoria para 100 líneas
+    if (reader.lines == NULL) {
+        printf("[ERROR2] No se pudo asignar memoria para lines\n");
+        fclose(f);
+        exit(1);
+    }
+    reader.lines[reader.countlines++] = 0;
+    reader.content = (char *)malloc(sizeof(char) * reader.size);
+    if (reader.content == NULL) {
+        printf("[ERROR3] No se pudo asignar memoria para content\n");
+        fclose(f);
+        exit(1);
+    }
+
+    while ((c = fgetc(f)) != EOF) {
+        if (reader.count >= reader.size - 1) {
+            reader.size *= 2;
+            char *temp = realloc(reader.content, sizeof(char) * reader.size);
+            if (temp == NULL) {
+                printf("[ERROR4] No se pudo reasignar memoria para content\n");
+                fclose(f);
+                exit(1);
+            }
+            reader.content = temp;
+        }
+        
+        if (c == '\n') {
+            if (reader.countlines >= 100) {
+                int *temp = realloc(reader.lines, sizeof(int) * (reader.countlines + 100));
+                if (temp == NULL) {
+                    printf("[ERROR5] No se pudo reasignar memoria para lines\n");
+                    fclose(f);
+                    exit(1);
+                }
+                reader.lines = temp;
+            }
+            reader.lines[reader.countlines++] = reader.count + 1;
+        }
+        reader.content[reader.count++] = c;
+    }
+    reader.content[reader.count] = '\0';
+    fclose(f);
 }
-
 void mostrar(){
 	printf("%s", reader.content);
 }

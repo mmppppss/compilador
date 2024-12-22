@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "Analex.h"
-Token token;
 
 void analex() {
     char *ac = (char *)malloc(1); 
@@ -119,7 +118,7 @@ void analex() {
                 break;
 			case 2:{
 					double num = atof(ac);
-					token = createToken(NUM, ac);
+					token = createToken(NUM, strdup(ac));
 					free(ac);
 					return;
 				}
@@ -164,7 +163,7 @@ void analex() {
 				}
 				break;
 			case 6:
-				token = createToken(CAD, ac);
+				token = createToken(CAD, strdup(ac));
                 free(ac);
 				return;
 				break;
