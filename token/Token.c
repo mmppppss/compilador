@@ -66,12 +66,12 @@ Token reservada(char *name){
 	for(int i = 0;  i < 6; i++) {
 		if(strcmp(reservadas[i], name)==0){
 			switch(i){
-				case 0: return createToken(LEE, name);
-				case 1: return createToken(ESC, name);
-				case 2: return createToken(IRA, name);
-				case 3: return createToken(SI_, name);
-				case 4: return createToken(ENT, name);
-				case 5: return createToken(FSI, name);
+				case 0: return createToken(LEE, "_");
+				case 1: return createToken(ESC, "_");
+				case 2: return createToken(IRA, "_");
+				case 3: return createToken(SI_, "_");
+				case 4: return createToken(ENT, "_");
+				case 5: return createToken(FSI, "_");
 			}
 		}
 	}

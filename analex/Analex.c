@@ -8,15 +8,14 @@
 Token token;
 
 void analex() {
-	char *ac = NULL;
-	ac=(char *)malloc(1000*sizeof(char));
+    char *ac = (char *)malloc(1); 
     if (ac == NULL) {
         fprintf(stderr, "Error al reservar memoria\n");
         exit(EXIT_FAILURE);
     }
     int peso = 0, estado = 0, count = 0;
 
-	ac=concat("", '\0');
+	ac[0]='\0';
     for (;;) {
         char c = getCC();
 		/* to debug
@@ -31,6 +30,7 @@ void analex() {
         switch (estado) {
 			case -1:
 				token = createToken(ERR, "End of File");
+                free(ac);
 				return;
 				break;
             case 0:
@@ -93,7 +93,10 @@ void analex() {
 				} else if(c==','){
 					estado=31;
 					avanzar();	
-				} else {
+				} else if(c=='\0'){
+					estado=-1;
+					avanzar();//no usado
+				}else {
                 	estado=0;
 					//printf("deteccion no valida %c",c);
 					avanzar();
@@ -117,6 +120,7 @@ void analex() {
 			case 2:{
 					double num = atof(ac);
 					token = createToken(NUM, ac);
+					free(ac);
 					return;
 				}
 				break;
@@ -161,18 +165,22 @@ void analex() {
 				break;
 			case 6:
 				token = createToken(CAD, ac);
+                free(ac);
 				return;
 				break;
 			case 7:
 				token = createToken(SUM, "_");
+                free(ac);
 				return;
 				break;
 			case 8:
 				token = createToken(RES, "_");
+                free(ac);
 				return;
 				break;
 			case 9:
 				token = createToken(MUL, "_");
+                free(ac);
 				return;
 				break;
 			case 10:
@@ -180,11 +188,13 @@ void analex() {
 					estado=30;
 				}else{
 					token = createToken(DIV, "_");
+					free(ac);
 					return;
 				}
 				break;
 			case 11:
 				token = createToken(MOD, "_");
+                free(ac);
 				return;
 				break;
 			case 12:
@@ -197,10 +207,12 @@ void analex() {
 				break;
 			case 13:
 				token = createToken(MYR, "_");
+                free(ac);
 				return;
 				break;
 			case 14:
 				token = createToken(MYI, "_");
+                free(ac);
 				return;
 				break;
 			case 15:
@@ -213,10 +225,12 @@ void analex() {
 				break;
 			case 16:
 				token = createToken(MNR, "_");
+                free(ac);
 				return;
 				break;
 			case 17:
 				token = createToken(MNI, "_");
+                free(ac);
 				return;
 				break;
 			case 18:
@@ -229,10 +243,12 @@ void analex() {
 				break;
 			case 19:
 				token = createToken(ASG, "_");
+                free(ac);
 				return;
 				break;
 			case 20:
 				token = createToken(IGU, "_");
+                free(ac);
 				return;
 				break;
 			case 21:
@@ -245,18 +261,22 @@ void analex() {
 				break;
 			case 22:
 				token = createToken(NOT, "_");
+                free(ac);
 				return;
 				break;
 			case 23:
 				token = createToken(DIF,"_");
+                free(ac);
 				return;
 				break;
 			case 24:
 				token = createToken(AND, "_");
+                free(ac);
 				return;
 				break;
 			case 25:
 				token = createToken(OR_, "_");
+                free(ac);
 				return;
 				break;
 			case 26:
@@ -272,22 +292,25 @@ void analex() {
 			case 27:{
 				Token tempToken = reservada(ac);	
 				if(tempToken.type==IDT){
-					//int posTS = tsInstall(ac, 0.0);
+					int posTS = tsInstall(ac, 0.0);
 					//char str[20];
 					char *str = malloc(20 * sizeof(char));
-					snprintf(str, sizeof(str), "%d", 1);
+					snprintf(str, sizeof(str), "%d", posTS);
 					token = createToken(IDT, str);
 				}else{
 					token = tempToken;
 				}
+                free(ac);
 				return;}
 				break;
 			case 28:
 				token = createToken(PAP, "_");
+                free(ac);
 				return;
 				break;
 			case 29:
 				token = createToken(PCI, "_");
+                free(ac);
 				return;
 				break;
 			case 30:
@@ -301,6 +324,7 @@ void analex() {
 			break;
 			case 31:
 				token = createToken(COM, "_");
+                free(ac);
 				return;
 				break;
             default:

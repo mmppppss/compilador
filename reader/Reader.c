@@ -14,6 +14,7 @@ Reader *newReader(char *filename){
 	reader.countlines = 0;
 	reader.pos = 0;
 	reader.count = 0;
+	loadFile();
 	return &reader;
 }
 
@@ -89,10 +90,15 @@ void irALinea(int linea){
     }
 }
 
+
 char* concat(char* s, char c) {
-    char* x = malloc(strlen(s) + 2); // +1 para el carácter y +1 para el terminador nulo
-    strcpy(x, s);
-    x[strlen(s)] = c;
-    x[strlen(s) + 1] = '\0';
+    size_t len = strlen(s);
+    char* x = realloc(s, len + 2); // +1 para el carácter y +1 para el terminador nulo
+    if (x == NULL) {
+        fprintf(stderr, "Error al expandir memoria\n");
+        exit(EXIT_FAILURE);
+    }
+    x[len] = c;
+    x[len + 1] = '\0';
     return x;
 }

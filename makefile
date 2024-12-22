@@ -1,5 +1,5 @@
 TARGET = main
-LIBS = reader/Reader.c
+LIBS = reader/Reader.c token/Token.c simbolos/tSimbolos.c analex/Analex.c 
 MAIN = main.c
 COMP = gcc
 
